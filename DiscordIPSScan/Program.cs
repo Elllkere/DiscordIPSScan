@@ -50,9 +50,11 @@ namespace DiscordIPSScan
             long all = regions.Count * limit;
             long done = 0;
 
+            List<string> ip_per_reg = new();
+
             Parallel.ForEach(regions, region =>
             {
-                using StreamWriter writer = new StreamWriter($"{region}.txt");
+                //using StreamWriter writer = new StreamWriter($"{region}.txt");
                 for (int i = 1; i <= 15000; i++)
                 {
                     Interlocked.Increment(ref done);
@@ -66,7 +68,8 @@ namespace DiscordIPSScan
                         {
                             if (!string.IsNullOrEmpty(ip.ToString()))
                             {
-                                writer.WriteLine(ip.ToString());
+                                ip_per_reg.Add(ip.ToString());
+                                //writer.WriteLine(ip.ToString());
                             }
                         }
 
@@ -91,11 +94,11 @@ namespace DiscordIPSScan
                 }
             });
 
-            List<string> ip_per_reg = new();
-            foreach(var region in regions)
+
+            /*foreach(var region in regions)
             {
                 ip_per_reg.AddRange(File.ReadAllLines($"{region}.txt"));
-            }
+            }*/
 
             File.WriteAllLines("ips.txt", ip_per_reg);
         }
